@@ -1,0 +1,604 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Activate Account - Earnqube</title>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Poppins', sans-serif;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 20px;
+    }
+
+    .container {
+      background: white;
+      border-radius: 15px;
+      box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+      width: 100%;
+      max-width: 600px;
+      padding: 40px;
+    }
+
+    .header {
+      text-align: center;
+      margin-bottom: 30px;
+    }
+
+    .logo {
+      font-size: 48px;
+      margin-bottom: 10px;
+    }
+
+    h1 {
+      font-size: 28px;
+      color: #333;
+      margin-bottom: 10px;
+      font-weight: 700;
+    }
+
+    .subtitle {
+      color: #999;
+      font-size: 14px;
+    }
+
+    .steps {
+      display: flex;
+      justify-content: space-between;
+      margin: 30px 0;
+      position: relative;
+    }
+
+    .steps::before {
+      content: '';
+      position: absolute;
+      top: 20px;
+      left: 0;
+      right: 0;
+      height: 2px;
+      background: #e0e0e0;
+      z-index: 0;
+    }
+
+    .step {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      flex: 1;
+      position: relative;
+      z-index: 1;
+    }
+
+    .step-number {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background: white;
+      border: 3px solid #e0e0e0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      margin-bottom: 10px;
+      transition: 0.3s;
+    }
+
+    .step.active .step-number {
+      background: #667eea;
+      color: white;
+      border-color: #667eea;
+    }
+
+    .step.completed .step-number {
+      background: #4CAF50;
+      color: white;
+      border-color: #4CAF50;
+    }
+
+    .step-label {
+      font-size: 12px;
+      color: #999;
+      text-align: center;
+    }
+
+    .form-section {
+      display: none;
+    }
+
+    .form-section.active {
+      display: block;
+    }
+
+    .form-group {
+      margin-bottom: 20px;
+    }
+
+    label {
+      display: block;
+      font-size: 14px;
+      font-weight: 600;
+      color: #333;
+      margin-bottom: 8px;
+    }
+
+    input, select {
+      width: 100%;
+      padding: 12px 15px;
+      border: 2px solid #e0e0e0;
+      border-radius: 8px;
+      font-size: 14px;
+      transition: 0.3s;
+      font-family: 'Poppins', sans-serif;
+    }
+
+    input:focus, select:focus {
+      outline: none;
+      border-color: #667eea;
+      box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+    }
+
+    .alert {
+      padding: 15px;
+      border-radius: 8px;
+      margin-bottom: 20px;
+      font-size: 14px;
+      display: flex;
+      gap: 10px;
+      align-items: center;
+    }
+
+    .alert-error {
+      background: #ffebee;
+      color: #c62828;
+      border-left: 4px solid #c62828;
+    }
+
+    .alert-success {
+      background: #e8f5e9;
+      color: #2e7d32;
+      border-left: 4px solid #2e7d32;
+    }
+
+    .alert-info {
+      background: #e3f2fd;
+      color: #1565c0;
+      border-left: 4px solid #1565c0;
+    }
+
+    .buttons {
+      display: flex;
+      gap: 15px;
+      margin-top: 30px;
+    }
+
+    button {
+      flex: 1;
+      padding: 12px;
+      border: none;
+      border-radius: 8px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: 0.3s;
+      font-size: 14px;
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, #667eea, #764ba2);
+      color: white;
+    }
+
+    .btn-primary:hover:not(:disabled) {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
+    }
+
+    .btn-secondary {
+      background: #e0e0e0;
+      color: #333;
+    }
+
+    .btn-secondary:hover:not(:disabled) {
+      opacity: 0.9;
+    }
+
+    button:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+    }
+
+    .provider-selection {
+      display: flex;
+      gap: 15px;
+      margin-bottom: 20px;
+    }
+
+    .provider-option {
+      flex: 1;
+      padding: 15px;
+      border: 2px solid #e0e0e0;
+      border-radius: 8px;
+      text-align: center;
+      cursor: pointer;
+      transition: 0.3s;
+    }
+
+    .provider-option:hover {
+      border-color: #667eea;
+    }
+
+    .provider-option.selected {
+      border-color: #667eea;
+      background: rgba(102, 126, 234, 0.1);
+    }
+
+    .provider-logo {
+      font-size: 32px;
+      margin-bottom: 10px;
+    }
+
+    .provider-name {
+      font-weight: 700;
+      font-size: 14px;
+    }
+
+    .fee-info {
+      background: #fff3e0;
+      border: 1px solid #ffe0b2;
+      border-radius: 8px;
+      padding: 12px;
+      margin-bottom: 20px;
+      font-size: 13px;
+      color: #e65100;
+    }
+
+    .success-message {
+      text-align: center;
+      padding: 30px;
+    }
+
+    .success-icon {
+      font-size: 64px;
+      color: #4CAF50;
+      margin-bottom: 15px;
+    }
+
+    .success-title {
+      font-size: 24px;
+      font-weight: 700;
+      color: #333;
+      margin-bottom: 10px;
+    }
+
+    .success-text {
+      color: #999;
+      margin-bottom: 20px;
+    }
+
+    .referral-info {
+      background: #e3f2fd;
+      border: 1px solid #90caf9;
+      border-radius: 8px;
+      padding: 15px;
+      margin-bottom: 20px;
+      font-size: 13px;
+    }
+
+    .referral-info strong {
+      color: #1565c0;
+      display: block;
+      margin-bottom: 5px;
+    }
+
+    @media (max-width: 600px) {
+      .steps {
+        flex-direction: column;
+      }
+
+      .steps::before {
+        width: 2px;
+        height: auto;
+        left: 20px;
+        top: 0;
+        bottom: 0;
+      }
+
+      .step {
+        margin: 20px 0;
+        margin-left: 20px;
+      }
+
+      .provider-selection {
+        flex-direction: column;
+      }
+
+      .buttons {
+        flex-direction: column;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <div class="logo">🔐</div>
+      <h1>Activate Your Account</h1>
+      <p class="subtitle">Complete these steps to start earning</p>
+    </div>
+
+    <!-- Steps Progress -->
+    <div class="steps">
+      <div class="step active" id="step1">
+        <div class="step-number">1</div>
+        <div class="step-label">Verify Info</div>
+      </div>
+      <div class="step" id="step2">
+        <div class="step-number">2</div>
+        <div class="step-label">Select Provider</div>
+      </div>
+      <div class="step" id="step3">
+        <div class="step-number">3</div>
+        <div class="step-label">Complete Payment</div>
+      </div>
+      <div class="step" id="step4">
+        <div class="step-number">✓</div>
+        <div class="step-label">Done</div>
+      </div>
+    </div>
+
+    <div id="alert"></div>
+
+    <!-- Step 1: Verify Info -->
+    <div class="form-section active" id="form-step1">
+      <h3 style="margin-bottom: 15px;">Verify Your Information</h3>
+      <div class="form-group">
+        <label>Phone Number</label>
+        <input type="tel" id="phone" readonly style="background: #f5f5f5;">
+      </div>
+      <div class="form-group">
+        <label>Account Status</label>
+        <input type="text" readonly value="Ready to Activate" style="background: #e8f5e9; color: #2e7d32; font-weight: 600;">
+      </div>
+      <div class="fee-info">
+        <i class="fas fa-info-circle"></i> <strong>Activation Fee:</strong> 16,500 UGX
+      </div>
+      <div id="referralInfo"></div>
+      <div class="buttons">
+        <button class="btn-primary" onclick="nextStep()">Continue</button>
+      </div>
+    </div>
+
+    <!-- Step 2: Select Provider -->
+    <div class="form-section" id="form-step2">
+      <h3 style="margin-bottom: 15px;">Select Payment Provider</h3>
+      <div class="provider-selection">
+        <div class="provider-option" onclick="selectProvider('mtn')">
+          <div class="provider-logo">📱</div>
+          <div class="provider-name">MTN MoMo</div>
+          <div style="font-size: 12px; color: #999; margin-top: 5px;">Fast & Secure</div>
+        </div>
+        <div class="provider-option" onclick="selectProvider('airtel')">
+          <div class="provider-logo">📞</div>
+          <div class="provider-name">Airtel Money</div>
+          <div style="font-size: 12px; color: #999; margin-top: 5px;">All Networks</div>
+        </div>
+      </div>
+      <div class="buttons">
+        <button class="btn-secondary" onclick="prevStep()">Back</button>
+        <button class="btn-primary" onclick="nextStep()" id="nextStep2Btn" disabled>Continue</button>
+      </div>
+    </div>
+
+    <!-- Step 3: Complete Payment -->
+    <div class="form-section" id="form-step3">
+      <h3 style="margin-bottom: 15px;">Complete Payment</h3>
+      <div class="fee-info">
+        <strong>Amount to Pay:</strong> 19,500 UGX<br>
+        <strong>Provider:</strong> <span id="selectedProviderDisplay">-</span>
+      </div>
+      <div class="form-group">
+        <label>Phone Number (for payment)</label>
+        <input type="tel" id="paymentPhone" placeholder="256700000001" required>
+      </div>
+      <div class="alert alert-info">
+        <i class="fas fa-info-circle"></i>
+        <div>
+          <strong>Follow the USSD Prompt</strong><br>
+          You'll receive an STK push to confirm payment on your phone. Enter your PIN to complete the transaction.
+        </div>
+      </div>
+      <div class="buttons">
+        <button class="btn-secondary" onclick="prevStep()">Back</button>
+        <button class="btn-primary" onclick="completePayment()">
+          <i class="fas fa-lock"></i> Pay 19,500 UGX
+        </button>
+      </div>
+    </div>
+
+    <!-- Step 4: Success -->
+    <div class="form-section" id="form-step4">
+      <div class="success-message">
+        <div class="success-icon">✅</div>
+        <div class="success-title">Account Activated!</div>
+        <div class="success-text">You're all set to start earning money on Earnqube</div>
+        <div style="background: #e8f5e9; padding: 15px; border-radius: 8px; margin: 20px 0; text-align: left; font-size: 13px; color: #2e7d32;">
+          <strong>What's next?</strong><br>
+          <ul style="margin-top: 10px; margin-left: 20px;">
+            <li>Complete daily tasks to earn money</li>
+            <li>Refer friends and earn bonuses</li>
+            <li>Withdraw your earnings anytime</li>
+          </ul>
+        </div>
+        <button class="btn-primary" style="margin-top: 20px;" onclick="goDashboard()">
+          Go to Dashboard
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <script src="api.js"></script>
+  <script>
+    let currentStep = 1;
+    let selectedProvider = null;
+
+    window.addEventListener('DOMContentLoaded', () => {
+      if (!api.userId) {
+        window.location.href = '/login.html';
+        return;
+      }
+
+      document.getElementById('phone').value = api.phone;
+      loadReferralInfo();
+    });
+
+    function loadReferralInfo() {
+      // Check if user was referred
+      // This would come from the API in a real scenario
+    }
+
+    function nextStep() {
+      if (currentStep === 2 && !selectedProvider) {
+        showAlert('Please select a payment provider', 'error');
+        return;
+      }
+
+      currentStep++;
+      updateSteps();
+      scrollToTop();
+
+      if (currentStep === 3) {
+        document.getElementById('paymentPhone').value = api.phone;
+      }
+    }
+
+    function prevStep() {
+      if (currentStep > 1) {
+        currentStep--;
+        updateSteps();
+        scrollToTop();
+      }
+    }
+
+    function updateSteps() {
+      // Hide all sections
+      document.querySelectorAll('.form-section').forEach(el => {
+        el.classList.remove('active');
+      });
+
+      // Show current section
+      document.getElementById('form-step' + currentStep).classList.add('active');
+
+      // Update step indicators
+      document.querySelectorAll('.step').forEach((step, index) => {
+        step.classList.remove('active', 'completed');
+        if (index + 1 < currentStep) {
+          step.classList.add('completed');
+        } else if (index + 1 === currentStep) {
+          step.classList.add('active');
+        }
+      });
+
+      // Update next button disabled state
+      const nextBtn = document.getElementById('nextStep2Btn');
+      if (nextBtn) {
+        nextBtn.disabled = !selectedProvider;
+      }
+    }
+
+    function selectProvider(provider) {
+      selectedProvider = provider;
+      document.querySelectorAll('.provider-option').forEach(el => {
+        el.classList.remove('selected');
+      });
+      event.target.closest('.provider-option').classList.add('selected');
+
+      document.getElementById('selectedProviderDisplay').textContent =
+        provider === 'mtn' ? 'MTN MoMo' : 'Airtel Money';
+
+      const nextBtn = document.getElementById('nextStep2Btn');
+      if (nextBtn) {
+        nextBtn.disabled = false;
+      }
+    }
+
+    async function completePayment() {
+      const paymentPhone = document.getElementById('paymentPhone').value;
+
+      if (!paymentPhone) {
+        showAlert('Please enter payment phone number', 'error');
+        return;
+      }
+
+      try {
+        const btn = event.target;
+        btn.disabled = true;
+        btn.innerHTML = '<span style="display: inline-block; width: 15px; height: 15px; border: 3px solid rgba(255,255,255,0.3); border-radius: 50%; border-top-color: white; animation: spin 1s linear infinite; margin-right: 8px;"></span>Processing...';
+
+        const transactionId = 'TX-' + Date.now();
+
+        // Initiate payment
+        const paymentRes = await api.initiatePayment(
+          paymentPhone,
+          api.phone,
+          selectedProvider,
+          transactionId,
+          16500
+        );
+
+        showAlert('Payment initiated! Check your phone for STK prompt', 'success');
+
+        // Wait a moment then activate
+        setTimeout(async () => {
+          try {
+            const activateRes = await api.activate(api.phone, selectedProvider, transactionId);
+            currentStep++;
+            updateSteps();
+            scrollToTop();
+          } catch (error) {
+            showAlert('Error: ' + error.message, 'error');
+            btn.disabled = false;
+            btn.textContent = 'Pay 19,500 UGX';
+          }
+        }, 3000);
+
+      } catch (error) {
+        showAlert(error.message || 'Payment failed', 'error');
+        const btn = event.target;
+        btn.disabled = false;
+        btn.textContent = 'Pay 19,500 UGX';
+      }
+    }
+
+    function goDashboard() {
+      window.location.href = '/dashboard.html';
+    }
+
+    function showAlert(message, type = 'info') {
+      const alertDiv = document.getElementById('alert');
+      const alertClass = `alert alert-${type}`;
+      const icon = type === 'success' ? 'check-circle' : type === 'error' ? 'exclamation-circle' : 'info-circle';
+
+      alertDiv.innerHTML = `
+        <div class="${alertClass}">
+          <i class="fas fa-${icon}"></i> ${message}
+        </div>
+      `;
+      scrollToTop();
+    }
+
+    function scrollToTop() {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+  </script>
+</body>
+</html>

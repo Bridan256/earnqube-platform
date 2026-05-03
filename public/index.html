@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Earnqube - Earn Money Online</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Poppins', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 20px;
+    }
+
+    .payment-container {
+      background: white;
+      padding: 40px;
+      border-radius: 15px;
+      box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+      width: 100%;
+      max-width: 500px;
+    }
+
+    .header {
+      text-align: center;
+      margin-bottom: 30px;
+    }
+
+    .header h1 {
+      color: #FF6B35;
+      font-size: 32px;
+      margin-bottom: 10px;
+      font-weight: 700;
+    }
+
+    .header p {
+      color: #999;
+      font-size: 14px;
+    }
+
+    .form-group {
+      margin-bottom: 20px;
+    }
+
+    label {
+      display: block;
+      margin-bottom: 8px;
+      color: #333;
+      font-weight: 600;
+      font-size: 14px;
+    }
+
+    input, select {
+      width: 100%;
+      padding: 12px;
+      border: 2px solid #e0e0e0;
+      border-radius: 5px;
+      font-size: 14px;
+      transition: border-color 0.3s;
+    }
+
+    input:focus, select:focus {
+      outline: none;
+      border-color: #667eea;
+    }
+
+    .provider-options {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      margin-bottom: 20px;
+    }
+
+    .provider-option {
+      padding: 12px;
+      border: 2px solid #e0e0e0;
+      border-radius: 5px;
+      text-align: center;
+      cursor: pointer;
+      transition: all 0.3s;
+      background: white;
+    }
+
+    .provider-option:hover {
+      border-color: #667eea;
+      background: #f5f7fa;
+    }
+
+    .provider-option.selected {
+      border-color: #667eea;
+      background: #f0f3ff;
+      font-weight: 600;
+    }
+
+    .provider-option img {
+      width: 40px;
+      margin-bottom: 10px;
+    }
+
+    button {
+      width: 100%;
+      padding: 14px;
+      background: linear-gradient(135deg, #FF6B35 0%, #F7931E 100%);
+      color: white;
+      border: none;
+      border-radius: 8px;
+      font-size: 16px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s;
+      box-shadow: 0 4px 15px rgba(255, 107, 53, 0.3);
+    }
+
+    button:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(255, 107, 53, 0.4);
+    }
+
+    button:active {
+      transform: translateY(0);
+    }
+
+    button:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+    }
+
+    .error-message {
+      color: #e74c3c;
+      font-size: 14px;
+      margin-top: 10px;
+      padding: 10px;
+      background: #f8d7da;
+      border-radius: 5px;
+      display: none;
+    }
+
+    .success-message {
+      color: #27ae60;
+      font-size: 14px;
+      margin-top: 10px;
+      padding: 10px;
+      background: #d4edda;
+      border-radius: 5px;
+      display: none;
+    }
+
+    .loading {
+      display: none;
+      text-align: center;
+      color: #667eea;
+      margin-top: 10px;
+    }
+
+    .info-box {
+      background: #f5f7fa;
+      padding: 15px;
+      border-radius: 5px;
+      margin-top: 20px;
+      font-size: 13px;
+      color: #666;
+      line-height: 1.6;
+    }
+
+    .info-box strong {
+      color: #333;
+    }
+  </style>
+</head>
+<body>
+  <div class="payment-container">
+    <div class="header">
+      <h1>💰 Earnqube</h1>
+      <p>Fast & Secure Mobile Money Payments</p>
+    </div>
+
+    <form id="paymentForm">
+      <div class="form-group">
+        <label for="name">Full Name *</label>
+        <input type="text" id="name" placeholder="John Doe" required>
+      </div>
+
+      <div class="form-group">
+        <label for="phone">Phone Number *</label>
+        <input type="tel" id="phone" placeholder="+256700000000" required>
+      </div>
+
+      <div class="form-group">
+        <label for="amount">Amount *</label>
+        <input type="number" id="amount" placeholder="50000" min="1000" required>
+      </div>
+
+      <div class="form-group">
+        <label>Select Payment Provider *</label>
+        <div class="provider-options">
+          <div class="provider-option" onclick="selectProvider('mtn')">
+            📱 MTN
+          </div>
+          <div class="provider-option" onclick="selectProvider('airtel')">
+            📱 Airtel
+          </div>
+        </div>
+        <input type="hidden" id="provider" required>
+      </div>
+
+      <button type="submit" id="payBtn">Proceed to Payment</button>
+
+      <div class="error-message" id="errorMessage"></div>
+      <div class="success-message" id="successMessage">Payment initiated! Waiting for confirmation...</div>
+      <div class="loading" id="loading">🔄 Processing payment...</div>
+    </form>
+
+    <div class="info-box">
+      <strong>ℹ️ Important:</strong>
+      <br>✅ Your payment is secure and encrypted
+      <br>✅ Follow the USSD prompt on your phone
+      <br>✅ You'll receive confirmation via SMS
+      <br>✅ Support: contact@earnqube.com
+    </div>
+  </div>
+
+  <script>
+    let selectedProvider = null;
+
+    function selectProvider(provider) {
+      selectedProvider = provider;
+      document.getElementById('provider').value = provider;
+
+      document.querySelectorAll('.provider-option').forEach(el => {
+        el.classList.remove('selected');
+      });
+
+      event.target.closest('.provider-option').classList.add('selected');
+    }
+
+    document.getElementById('paymentForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+
+      if (!selectedProvider) {
+        showError('Please select a payment provider');
+        return;
+      }
+
+      const name = document.getElementById('name').value;
+      const phone = document.getElementById('phone').value;
+      const amount = document.getElementById('amount').value;
+      const provider = selectedProvider;
+
+      // Generate transaction ID
+      const transactionId = `TXN-${Date.now()}`;
+
+      document.getElementById('loading').style.display = 'block';
+      document.getElementById('errorMessage').style.display = 'none';
+
+      try {
+        const response = await fetch('/api/pay', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            name,
+            phone,
+            amount: parseInt(amount),
+            provider,
+            transactionId
+          })
+        });
+
+        const data = await response.json();
+
+        if (response.ok) {
+          document.getElementById('successMessage').style.display = 'block';
+          document.getElementById('paymentForm').style.display = 'none';
+
+          setTimeout(() => {
+            showMessage(`✅ Payment Initiated!\n\nTransaction ID: ${transactionId}\n\nCheck your ${provider.toUpperCase()} app for payment confirmation.`, 'success');
+          }, 2000);
+        } else {
+          throw new Error(data.message || 'Payment failed');
+        }
+      } catch (error) {
+        document.getElementById('loading').style.display = 'none';
+        showError(error.message);
+      }
+    });
+
+    function showError(msg) {
+      const el = document.getElementById('errorMessage');
+      el.textContent = msg;
+      el.style.display = 'block';
+    }
+
+    function showMessage(msg, type) {
+      alert(msg);
+    }
+  </script>
+</body>
+</html>

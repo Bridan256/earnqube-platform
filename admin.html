@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Earnqube Admin Dashboard</title>
+
+  <style>
+    body {
+      font-family: Arial;
+      background: #0f0f0f;
+      color: white;
+      padding: 20px;
+    }
+
+    h1 {
+      color: #00ffcc;
+    }
+
+    .card {
+      background: #1c1c1c;
+      padding: 15px;
+      margin: 10px 0;
+      border-radius: 10px;
+    }
+
+    button {
+      padding: 6px 12px;
+      border: none;
+      cursor: pointer;
+      border-radius: 5px;
+      background: #00ffcc;
+      color: black;
+      font-weight: bold;
+    }
+
+    button:hover {
+      background: #00ccaa;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+    }
+
+    .stat {
+      background: #222;
+      padding: 15px;
+      border-radius: 10px;
+      text-align: center;
+    }
+  </style>
+</head>
+
+<body>
+
+<h1>🔥 Earnqube Admin Dashboard</h1>
+
+<!-- STATS -->
+<div class="grid" id="stats"></div>
+
+<h2>💳 Payments</h2>
+<div id="payments"></div>
+
+<script>
+async function loadStats() {
+  const res = await fetch("/api/admin/dashboard");
+  const data = await res.json();
+
+  document.getElementById("stats").innerHTML = `
+    <div class="stat">Total<br><h2>${data.total}</h2></div>
+    <div class="stat">Pending<br><h2>${data.pending}</h2></div>
+    <div class="stat">Success<br><h2>${data.success}</h2></div>
+  `;
+}
+
+async function loadPayments() {
+  const res = await fetch("/api/admin/payments");
+  const data = await res.json();
+
+  document.getElementById("payments").innerHTML = data.map(p => `
+    <div class="card">
+      <p><b>Name:</b> ${p.name}</p>
+      <p><b>Phone:</b> ${p.phone}</p>
+      <p><b>Provider:</b> ${p.provider}</p>
+      <p><b>Status:</b> ${p.status}</p>
+
+      <button onclick="activateUser('${p._id}')">
+        Activate User 🚀
+      </button>
+    </div>
+  `).join("");
+}
+
+async function activateUser(id) {
+  await fetch(`/api/admin/activate/${id}`, {
+    method: "POST"
+  });
+
+  loadStats();
+  loadPayments();
+}
+
+loadStats();
+loadPayments();
+</script>
+
+</body>
+</html>
