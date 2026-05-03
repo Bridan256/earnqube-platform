@@ -44,7 +44,7 @@ module.exports = {
       name: "MTN MoMo",
       currency: "EUR",
       sandbox: false, // Changed to production
-      merchantPhone: process.env.MERCHANT_PHONE_BOTSWANA || "+26761537538"
+      merchantPhone: process.env.MERCHANT_PHONE_UGANDA || "+256740262269"
     },
     airtel: {
       name: "Airtel Money",
